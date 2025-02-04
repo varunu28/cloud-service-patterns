@@ -23,7 +23,8 @@ public class WebService {
 
     public String buildGreetingForLocale(String locale) {
         String name = restTemplate.getForObject(serviceProperties.getNameServiceUrl(), String.class);
-        String greeting = restTemplate.getForObject(serviceProperties.getGreetingServiceUrl() + "/" + locale, String.class);
+        String greeting =
+            restTemplate.getForObject(serviceProperties.getGreetingServiceUrl() + "/" + locale, String.class);
         return greeting + " " + name;
     }
 }
