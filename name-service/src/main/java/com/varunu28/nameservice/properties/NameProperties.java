@@ -1,8 +1,10 @@
 package com.varunu28.nameservice.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 @ConfigurationProperties(prefix = "config")
+@RefreshScope
 public class NameProperties {
 
     private String name;

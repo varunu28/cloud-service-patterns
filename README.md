@@ -10,9 +10,8 @@ Code accompanying blogs for cloud service patterns
     export SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=your-personal-access-token
 ```
 
-## Manually refreshing config
- - Expose the `/actuator/refresh` endpoint in your `application.properties` file
- - Add the `spring-cloud-starter-actuator` dependency to your `pom.xml` file
- - Add the `@RefreshScope` annotation to your Spring beans that you want to refresh
- - Make a `POST` request to the `/actuator/refresh` endpoint
+## Manually refreshing config through Spring cloud bus
+ - Expose the `/actuator/refresh` endpoint in your `application.properties` file for all services
+ - Start AMQP broker like RabbitMQ or Kafka 
+ - Make a `POST` request to the `/actuator/busrefresh` endpoint in Spring cloud config server
  - The Spring beans with the `@RefreshScope` annotation will be refreshed with the new configuration without restarting the application
