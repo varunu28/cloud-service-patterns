@@ -10,8 +10,14 @@ Code accompanying blogs for cloud service patterns
     export SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=your-personal-access-token
 ```
 
-## Manually refreshing config through Spring cloud bus
- - Expose the `/actuator/refresh` endpoint in your `application.properties` file for all services
+## Automatically refresh config through Spring cloud bus & Spring cloud config monitor
+ - Expose the `/monitor` endpoint in your `application.properties` file for spring cloud config server
+ - If you are using Spring security, you will need to enable the `/monitor` endpoint in your security configuration
  - Start AMQP broker like RabbitMQ or Kafka 
- - Make a `POST` request to the `/actuator/busrefresh` endpoint in Spring cloud config server
- - The Spring beans with the `@RefreshScope` annotation will be refreshed with the new configuration without restarting the application
+ - Create a [GitHub webhook](https://github.com/varunu28/cloud-service-patterns/settings/hooks) to trigger the `/monitor` endpoint to:
+   - Send a `POST` request to the `/monitor` endpoint in Spring cloud config server
+   - The Spring beans with the `@RefreshScope` annotation will be refreshed with the new configuration without restarting the application
+
+## Testing locally
+ - Expose `localhost:8888`(Spring cloud config server) to public network through [ngrok](https://ngrok.com/)
+ - Use the ngrok exposed URL in configuring GitHub webhook
