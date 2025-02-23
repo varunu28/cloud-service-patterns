@@ -11,5 +11,11 @@ Create a config file in filesystem on path `${user.home}/config`. Please note th
  - Start AMQP broker like RabbitMQ or Kafka
  - The Spring beans with the `@RefreshScope` annotation will be refreshed with the new configuration without restarting the application
 
-## Testing locally
- - Run the services & config server locally 
+## Containerize & run the application
+ - Create a docker network using `docker network create cloud-service-patterns-network`
+ - Build docker images for `greeting-service`, `name-service` & `webapp` using `./mvnw spring-boot:build-image` command
+ - Start the rabbitmq container using `docker compose up -d`
+ - Connect rabbitmq container to the docker network using `docker network connect cloud-service-patterns-network rabbitmq`
+ - Start the `name-service` container using `docker run -p 8001:8001 --name name-service --network cloud-service-patterns-network varunu28/name-service:latest`
+ - Start the `greeting-service` container using `docker run -p 8002:8002 --name greeting-service --network cloud-service-patterns-network varunu28/greeting-service:latest`
+ - Start the `webapp` container using `docker run -p 8080:8080 --name webapp --network cloud-service-patterns-network varunu28/webapp:latest`
