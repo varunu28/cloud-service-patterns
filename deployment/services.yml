@@ -17,6 +17,13 @@ spec:
           image: varunu2892/name-service:latest
           ports:
             - containerPort: 8001
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: config
 
 ---
 apiVersion: v1
@@ -50,7 +57,13 @@ spec:
           image: varunu2892/greeting-service:latest
           ports:
             - containerPort: 8002
-
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: config
 ---
 apiVersion: v1
 kind: Service

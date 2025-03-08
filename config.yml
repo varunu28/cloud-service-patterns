@@ -1,9 +1,0 @@
-config:
-  name: Varun
-  greeting: Hello
-  greetings:
-    en: Hello
-    es: Hola
-    fr: Bonjour
-    cn: Nǐ hǎo
-    jp: Kon'nichiwa

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+  config.properties: |
+    config.name=Varun
+    config.greeting=Hello
+    config.greetings.en=Hello
+    config.greetings.es=Hola
+    config.greetings.fr=Bonjour
+    config.greetings.cn=Nǐ hǎo
+    config.greetings.jp=Kon'nichiwa
