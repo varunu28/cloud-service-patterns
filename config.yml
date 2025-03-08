@@ -2,7 +2,7 @@ config:
   name: Varun
   greeting: Hello
   greetings:
-    en: Hell
+    en: Hello
     es: Hola
     fr: Bonjour
     cn: Nǐ hǎo
