@@ -9,9 +9,11 @@
         <module name="webapp" />
         <module name="name-service" />
         <module name="greeting-service" />
-        <module name="spring-cloud-config-server" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-cloud-config-server" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

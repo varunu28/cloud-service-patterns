@@ -59,7 +59,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>varunu28/webapp</name>
+                        <name>varunu2892/webapp</name>
                     </image>
                 </configuration>
             </plugin>
