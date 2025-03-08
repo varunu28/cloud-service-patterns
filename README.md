@@ -15,7 +15,9 @@ Code accompanying blogs for cloud service patterns
 
 #### Apply service deployments
 ```shell
-  kubectl apply -f deployment/services.yml
+  kubectl apply -f deployment/name-service.yml
+  kubectl apply -f deployment/greeting-service.yml
+  kubectl apply -f deployment/webapp.yml
 ```
 
 #### Set port forwarding for `webapp` service

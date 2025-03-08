@@ -12,6 +12,11 @@ cd ../webapp
 
 cd ../deployment
 
+# Push images to Docker Hub
+docker push varunu2892/greeting-service:latest
+docker push varunu2892/name-service:latest
+docker push varunu2892/webapp:latest
+
 # Remove existing images from minikube
 minikube image rm varunu2892/greeting-service:latest
 minikube image rm varunu2892/name-service:latest
