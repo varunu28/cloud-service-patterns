@@ -1,0 +1,7 @@
+# create new namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: service-discovery
+  labels:
+    name: service-discovery

@@ -1,0 +1,35 @@
+# deployment/greeting-service-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greeting-service
+  namespace: service-discovery
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: greeting-service
+  template:
+    metadata:
+      labels:
+        app: greeting-service
+    spec:
+      containers:
+        - name: greeting-service
+          image: varunu2892/greeting-service:latest
+          ports:
+            - containerPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeting-service
+  namespace: service-discovery
+spec:
+  selector:
+    app: greeting-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8002
+  type: ClusterIP
