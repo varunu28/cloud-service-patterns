@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: user-service
+server:
+  port: 8003
+jwt:
+  secret: ${JWT_SECRET}

@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: order-pickup-service
+server:
+  port: 8002
