@@ -52,12 +52,12 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<String> validate(@RequestBody String token) {
+    public ResponseEntity<Boolean> validate(@RequestBody String token) {
         boolean isValid = jwtUtil.validateToken(token);
         if (isValid) {
-            return ResponseEntity.ok("Token is valid");
+            return ResponseEntity.ok(true);
         } else {
-            return ResponseEntity.status(401).body("Token is invalid");
+            return ResponseEntity.status(401).body(false);
         }
     }
 }

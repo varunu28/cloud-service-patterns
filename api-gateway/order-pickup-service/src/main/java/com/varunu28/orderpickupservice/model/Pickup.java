@@ -62,4 +62,8 @@ public class Pickup {
     public void markAsCancelled() {
         cancelledAt = ZonedDateTime.now();
     }
+
+    public boolean isCancelled() {
+        return cancelledAt != null;
+    }
 }

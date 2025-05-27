@@ -11,13 +11,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class HeaderValidationFilter extends OncePerRequestFilter {
 
-    private static final String AUTHORIZATION_HEADER = "X-Authorized-By";
-    private static final String AUTHORIZATION_VALUE = "Auth-Service";
+    private static final String CUSTOM_GATEWAY_HEADER = "X-From-Gateway";
+    private static final String CUSTOM_GATEWAY_VALUE = "true";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
-        if (request.getHeader(AUTHORIZATION_HEADER) == null || !request.getHeader(AUTHORIZATION_HEADER).equals(AUTHORIZATION_VALUE)) {
+        if (request.getHeader(CUSTOM_GATEWAY_HEADER) == null ||
+            !request.getHeader(CUSTOM_GATEWAY_HEADER).equals(CUSTOM_GATEWAY_VALUE)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

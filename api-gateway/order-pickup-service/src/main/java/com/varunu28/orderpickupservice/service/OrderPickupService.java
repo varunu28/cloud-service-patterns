@@ -21,7 +21,11 @@ public class OrderPickupService {
         if (!pickups.containsKey(id)) {
             throw new NoSuchElementException("Pickup with id " + id + " not found");
         }
-        return pickups.get(id);
+        Pickup pickup = pickups.get(id);
+        if (pickup.isCancelled()) {
+            throw new NoSuchElementException("Pickup with id " + id + " has been cancelled");
+        }
+        return pickup;
     }
 
     public Pickup createPickup(UUID assigneeId, UUID orderId, String description) {
@@ -39,7 +43,7 @@ public class OrderPickupService {
         if (description != null) {
             pickup.setDescription(description);
         }
-        if (completed) {
+        if (completed != null && completed) {
             pickup.markAsCompleted();
         }
         return pickup;
