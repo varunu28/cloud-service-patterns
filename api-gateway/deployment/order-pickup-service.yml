@@ -1,0 +1,36 @@
+# deployment/order-pickup-service-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-pickup-service
+  namespace: api-gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: order-pickup-service
+  template:
+    metadata:
+      labels:
+        app: order-pickup-service
+    spec:
+      containers:
+        - name: order-pickup-service
+          image: varunu2892/order-pickup-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-pickup-service
+  namespace: api-gateway
+spec:
+  selector:
+    app: order-pickup-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8002
+  type: ClusterIP
