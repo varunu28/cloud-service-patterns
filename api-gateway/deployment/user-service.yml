@@ -20,6 +20,12 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 8003
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: secret
 ---
 apiVersion: v1
 kind: Service

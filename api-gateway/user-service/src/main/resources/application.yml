@@ -4,4 +4,4 @@ spring:
 server:
   port: 8003
 jwt:
-  secret: ${JWT_SECRET:644cf65a-65c1-41bd-9909-499e121efc16} # Default JWT secret, which can be overridden by environment variable
+  secret: ${JWT_SECRET:644cf65a-65c1-41bd-9909-499e121efc16} # Default JWT secret. It is overridden by the value from the Kubernetes secret.
