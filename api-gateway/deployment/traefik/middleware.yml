@@ -1,0 +1,10 @@
+# middleware.yml
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: jwt-auth-middleware
+  namespace: api-gateway
+spec:
+  plugin:
+    jwtAuthPlugin:
+      userServiceUrl: "http://user-service.api-gateway.svc.cluster.local:80"

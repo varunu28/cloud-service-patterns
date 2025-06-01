@@ -1,0 +1,41 @@
+# traefik-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: api-gateway
+  labels:
+    app.kubernetes.io/name: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: traefik
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      volumes:
+        - name: traefik-config-volume
+          configMap:
+            name: traefik-static-conf
+      containers:
+        - name: traefik
+          image: varunu2892/traefik-custom-jwt:latest
+          imagePullPolicy: Never
+          args:
+            - --configFile=/etc/traefik/traefik.yml
+            - --providers.kubernetesgateway
+            - --experimental.kubernetesgateway
+            - --providers.kubernetesgateway.controllerName=traefik.io/gateway-controller
+            - --providers.kubernetesgateway.namespace=api-gateway
+          ports:
+            - name: web
+              containerPort: 8000
+            - name: admin
+              containerPort: 8080
+          volumeMounts:
+            - name: traefik-config-volume
+              mountPath: /etc/traefik # Mounts traefik.yml to /etc/traefik/traefik.yml

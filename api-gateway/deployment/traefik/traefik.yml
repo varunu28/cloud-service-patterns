@@ -1,0 +1,16 @@
+experimental:
+  localPlugins:
+    jwtAuthPlugin:
+      moduleName: "github.com/varunu28/traefik-plugin"
+entryPoints:
+  web:
+    address: ":8000"
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  kubernetesGateway: {}
+
+log:
+  level: "DEBUG"

@@ -1,0 +1,6 @@
+displayName: JWT Authentication Plugin
+type: middleware
+import: github.com/varunu28/traefik-plugin # This must match the moduleName in your static Traefik config
+summary: A middleware plugin to handle JWT authentication by calling a user service.
+testData:
+  userServiceUrl: "http://example.com/validate" # Example URL
