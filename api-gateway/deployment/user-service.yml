@@ -5,7 +5,7 @@ metadata:
   name: user-service
   namespace: api-gateway
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: user-service

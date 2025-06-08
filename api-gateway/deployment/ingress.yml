@@ -1,0 +1,33 @@
+# deployment/ingress.yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress
+  namespace: api-gateway
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api-gateway-demo.com
+      http:
+        paths:
+          - path: /api/v1/orders
+            pathType: Prefix
+            backend:
+              service:
+                name: order-service
+                port:
+                  number: 8001
+          - path: /api/v1/pickups
+            pathType: Prefix
+            backend:
+              service:
+                name: order-pickup-service
+                port:
+                  number: 8002
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 8003
