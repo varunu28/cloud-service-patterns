@@ -10,7 +10,7 @@ This repository provides an API Gateway setup using Kubernetes Ingress.
     ```
  - Create the Kubernetes namespace for the API Gateway
     ```bash
-      kctl apply -f deployment/namespace.yaml
+      kctl apply -f deployment/namespace.yml
     ```
  - Create secret for JWT. This is required for user service to validate JWT tokens.
    - Replace `<SECRET>` with your actual JWT secret.
@@ -19,9 +19,9 @@ This repository provides an API Gateway setup using Kubernetes Ingress.
     ```
  - Deploy the services
     ```bash
-      kctl apply -f deployment/order-service.yaml
-      kctl apply -f deployment/order-pickup-service.yaml
-      kctl apply -f deployment/user-service.yaml
+      kctl apply -f deployment/order-service.yml
+      kctl apply -f deployment/order-pickup-service.yml
+      kctl apply -f deployment/user-service.yml
     ```
  - Enable Nginx Ingress controller
     ```bash
@@ -29,7 +29,8 @@ This repository provides an API Gateway setup using Kubernetes Ingress.
     ```
  - Deploy the Ingress resource
      ```bash
-      kctl apply -f deployment/ingress.yaml
+      kctl apply -f deployment/user-service-ingress.yml
+      kctl apply -f deployment/protected-services-ingress.yml
      ```
  - Run `minikube tunnel`
  - Add the entry to your `/etc/hosts` file

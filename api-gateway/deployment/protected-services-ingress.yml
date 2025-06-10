@@ -1,9 +1,13 @@
-# deployment/ingress.yml
+# deployment/protected-services-protected-services-ingress.yml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api-gateway-ingress
+  name: protected-services-ingress
   namespace: api-gateway
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://user-service.api-gateway.svc.cluster.local/auth/validate"
+    nginx.ingress.kubernetes.io/auth-method: "GET"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-From-Gateway"
 spec:
   ingressClassName: nginx
   rules:
@@ -24,10 +28,3 @@ spec:
                 name: order-pickup-service
                 port:
                   number: 8002
-          - path: /auth
-            pathType: Prefix
-            backend:
-              service:
-                name: user-service
-                port:
-                  number: 8003

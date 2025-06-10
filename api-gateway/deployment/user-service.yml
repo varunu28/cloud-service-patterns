@@ -5,7 +5,7 @@ metadata:
   name: user-service
   namespace: api-gateway
 spec:
-  replicas: 1
+  replicas: 1 # The number of replicas is kept to 1 as we are using an in-memory database.
   selector:
     matchLabels:
       app: user-service

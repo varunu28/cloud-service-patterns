@@ -1,0 +1,26 @@
+# User service ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-service-ingress
+  namespace: api-gateway
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api-gateway-demo.com
+      http:
+        paths:
+          - path: /auth/login
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 8003
+          - path: /auth/register
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 8003
