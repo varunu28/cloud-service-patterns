@@ -2,6 +2,7 @@
 
 ## API Gateway through Kubernetes Ingress
 This repository provides an API Gateway setup using Kubernetes Ingress. 
+![Kubernetes Ingress API Gateway](media/kubernetes-ingress.png)
 
 ## How to run?
  - First build the docker images & load them to minikube cluster
