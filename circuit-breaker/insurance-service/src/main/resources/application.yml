@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: insurance-service
+server:
+  port: 8081
