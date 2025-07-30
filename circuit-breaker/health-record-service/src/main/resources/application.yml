@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: health-record-service
+
+server:
+  port: 8080
+
+insurance:
+  service:
+    url: http://localhost:8081/api/v1/verify
