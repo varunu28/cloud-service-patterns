@@ -3,3 +3,11 @@ spring:
     name: insurance-service
 server:
   port: 8081
+
+logging:
+  level:
+    com:
+      varunu28:
+        insuranceservice:
+          filter:
+            FailureInjectingFilter: DEBUG

@@ -1,0 +1,8 @@
+# config map for insurance service
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: insurance-service-config
+  namespace: circuit-breaker
+data:
+  config.txt: "PASS"

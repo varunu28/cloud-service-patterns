@@ -7,4 +7,4 @@ server:
 
 insurance:
   service:
-    url: http://localhost:8081/api/v1/verify
+    url: http://insurance-service/api/v1/verify

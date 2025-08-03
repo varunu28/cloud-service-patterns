@@ -1,0 +1,43 @@
+# deployment/insurance-service-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insurance-service
+  namespace: circuit-breaker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: insurance-service
+  template:
+    metadata:
+      labels:
+        app: insurance-service
+    spec:
+      containers:
+        - name: insurance-service
+          image: varunu2892/insurance-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: insurance-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insurance-service
+  namespace: circuit-breaker
+spec:
+  selector:
+    app: insurance-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
+  type: ClusterIP

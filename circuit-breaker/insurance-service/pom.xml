@@ -51,6 +51,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <env>
+                            <BP_JVM_VERSION>21</BP_JVM_VERSION>
+                        </env>
+                        <name>varunu2892/insurance-service</name>
+                    </image>
+                </configuration>
             </plugin>
         </plugins>
     </build>

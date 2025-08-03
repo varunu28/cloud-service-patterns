@@ -1,0 +1,36 @@
+# deployment/health-record-service-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-record-service
+  namespace: circuit-breaker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: health-record-service
+  template:
+    metadata:
+      labels:
+        app: health-record-service
+    spec:
+      containers:
+        - name: health-record-service
+          image: varunu2892/health-record-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: health-record-service
+  namespace: circuit-breaker
+spec:
+  selector:
+    app: health-record-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
