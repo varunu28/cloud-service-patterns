@@ -11,6 +11,8 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 
 @Service
@@ -38,23 +40,32 @@ public class HealthRecordService {
         int age,
         String controlNumber,
         String policyNumber) {
-        VerificationResponse verificationResponse = insuranceServiceRestClient.post()
-            .body(verificationRequest)
-            .contentType(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .body(VerificationResponse.class);
-        if (Objects.requireNonNull(verificationResponse).failureReason() != null) {
-            throw new InsuranceVerificationException(
-                "Insurance verification failed: " + verificationResponse.failureReason());
+        try {
+            VerificationResponse verificationResponse = insuranceServiceRestClient.post()
+                .body(verificationRequest)
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(VerificationResponse.class);
+            return new RegisterResponse(
+                firstName,
+                lastName,
+                age,
+                controlNumber,
+                policyNumber,
+                Objects.requireNonNull(verificationResponse).eligiblePlans()
+            );
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().is4xxClientError()) {
+                throw new InsuranceVerificationException(
+                    e.getStatusCode(),
+                    e.getStatusText(),
+                    e.getResponseBodyAsByteArray(),
+                    null);
+            }
+            throw e;
+        } catch (HttpServerErrorException e) {
+            return getFallbackResponse(firstName, lastName, age, controlNumber, policyNumber, e);
         }
-        return new RegisterResponse(
-            firstName,
-            lastName,
-            age,
-            controlNumber,
-            policyNumber,
-            verificationResponse.eligiblePlans()
-        );
     }
 
     private RegisterResponse getFallbackResponse(
