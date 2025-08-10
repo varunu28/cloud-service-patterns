@@ -12,7 +12,6 @@
  kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
 ```
 
-```
  - Inject failure through config-map after changing value of `config.txt` to `FAIL`
  ```
   kubectl apply -f deployment/config-map.yml
