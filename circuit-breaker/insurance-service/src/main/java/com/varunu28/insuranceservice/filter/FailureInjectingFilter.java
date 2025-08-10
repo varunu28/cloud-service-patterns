@@ -14,8 +14,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Component
 public class FailureInjectingFilter extends OncePerRequestFilter {
@@ -31,22 +32,21 @@ public class FailureInjectingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
+        LOGGER.debug("Injecting failure");
         if (currentConfigValue.equals(FAIL_VALUE)) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setContentType(APPLICATION_JSON_VALUE);
+            response.getWriter().write("{\"status\":\"FAILURE\",\"failureReason\":\"Injected failure\"}");
+            return;
         }
         filterChain.doFilter(request, response);
     }
 
     @Scheduled(fixedDelay = 100)
     public void updateConfig() {
-        LOGGER.debug("Refreshing config");
         String configValue = readConfig();
         if (configValue != null) {
-            if (!configValue.trim().equals(currentConfigValue)) {
-                LOGGER.debug("Config value changed from {} to {}", currentConfigValue, configValue.trim());
-            }
             currentConfigValue = configValue.trim();
-            LOGGER.debug("Config updated to: {}", currentConfigValue);
         }
     }
 
@@ -54,7 +54,6 @@ public class FailureInjectingFilter extends OncePerRequestFilter {
         try (var reader = new BufferedReader(new InputStreamReader(configFile.getInputStream()))) {
             return reader.readLine();
         } catch (IOException e) {
-            LOGGER.error("Error reading config file: {}", e.getMessage());
             return null;
         }
     }

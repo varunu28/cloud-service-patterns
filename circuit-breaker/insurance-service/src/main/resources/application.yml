@@ -11,3 +11,4 @@ logging:
         insuranceservice:
           filter:
             FailureInjectingFilter: DEBUG
+    root: warn

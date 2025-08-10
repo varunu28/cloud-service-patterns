@@ -1,22 +1,17 @@
 # Circuit Breaker 
  
 ## Spring Circuit Breaker 
- - Build image & upload image to minikube
+
+- Build images & deploy to Kubernetes
 ```bash
-  ./deployment/build_images.sh
+  ./deployment/run.sh
  ```
- - Create new namespace
+
+- Port forwarding for istio gateway
 ```bash
-  kubectl apply -f deployment/namespace.yml
+ kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
 ```
- - Apply config map
-```bash
-  kubectl apply -f deployment/config-map.yml
-```
- - Deploy services
-```bash
-  kubectl apply -f deployment/health-record-service.yml
-  kubectl apply -f deployment/insurance-service.yml
+
 ```
  - Inject failure through config-map after changing value of `config.txt` to `FAIL`
  ```

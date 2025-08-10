@@ -5,7 +5,7 @@ metadata:
   name: insurance-service
   namespace: circuit-breaker
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: insurance-service

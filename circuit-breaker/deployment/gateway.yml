@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: health-record-gateway
+  namespace: circuit-breaker
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: health-record-vs
+  namespace: circuit-breaker
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - health-record-gateway
+  http:
+    - route:
+        - destination:
+            host: health-record-service
+            port:
+              number: 80

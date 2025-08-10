@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 
 @Service
@@ -63,8 +62,6 @@ public class HealthRecordService {
                     null);
             }
             throw e;
-        } catch (HttpServerErrorException e) {
-            return getFallbackResponse(firstName, lastName, age, controlNumber, policyNumber, e);
         }
     }
 
@@ -73,8 +70,7 @@ public class HealthRecordService {
         String lastName,
         int age,
         String controlNumber,
-        String policyNumber,
-        Throwable throwable) {
+        String policyNumber) {
         return new RegisterResponse(
             firstName,
             lastName,

@@ -5,3 +5,4 @@ metadata:
   name: circuit-breaker
   labels:
     name: circuit-breaker
+    istio-injection: enabled
