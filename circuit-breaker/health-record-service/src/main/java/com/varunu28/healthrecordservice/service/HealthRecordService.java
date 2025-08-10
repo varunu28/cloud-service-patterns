@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 @Service
 public class HealthRecordService {
@@ -60,8 +63,12 @@ public class HealthRecordService {
                     e.getStatusText(),
                     e.getResponseBodyAsByteArray(),
                     null);
+            } else if (e.getStatusCode().is5xxServerError()) {
+                return getFallbackResponse(firstName, lastName, age, controlNumber, policyNumber);
             }
             throw e;
+        } catch (RestClientException e) {
+            return getFallbackResponse(firstName, lastName, age, controlNumber, policyNumber);
         }
     }
 

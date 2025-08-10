@@ -13,9 +13,10 @@ spec:
         http1MaxPendingRequests: 10
         maxRequestsPerConnection: 2
     outlierDetection:
-      consecutiveErrors: 3
-      interval: 30s
-      baseEjectionTime: 30s
+      consecutiveErrors: 1
+      interval: 10s
+      baseEjectionTime: 10s
+      splitExternalLocalOriginErrors: true
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -30,7 +31,8 @@ spec:
         - destination:
             host: insurance-service
       retries:
-        attempts: 3
+        attempts: 2
         perTryTimeout: 2s
-        retryOn: 5xx,reset,connect-failure,refused-stream
+        retryOn: 5xx
         retryRemoteLocalities: true
+      timeout: 10s
