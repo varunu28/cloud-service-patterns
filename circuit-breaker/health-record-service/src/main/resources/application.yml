@@ -8,3 +8,19 @@ server:
 insurance:
   service:
     url: http://localhost:8081/api/v1/verify
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: circuitbreakers, health, metrics
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+  simple:
+    metrics:
+      export:
+        enabled: true
