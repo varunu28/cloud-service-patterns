@@ -2,5 +2,28 @@ spring:
   application:
     name: order-service
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+
+  datasource:
+    url: jdbc:postgresql://localhost:5431/orderdb
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 server:
   port: 8001
+
+payment:
+  service:
+    url: http://localhost:8002/api/v1/payments

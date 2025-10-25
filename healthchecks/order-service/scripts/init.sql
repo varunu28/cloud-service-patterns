@@ -1,0 +1,22 @@
+CREATE
+    EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS orders
+(
+    id
+                    UUID
+        PRIMARY
+            KEY
+                                              DEFAULT
+                                                  uuid_generate_v4
+                                                  (
+                                                  ),
+    description     TEXT             NOT NULL,
+    amount          DOUBLE PRECISION NOT NULL,
+    customer_id     UUID             NOT NULL,
+    created_at      TIMESTAMPTZ      NOT NULL DEFAULT now(),
+    payment_id      UUID             NOT NULL,
+    updated_at      TIMESTAMPTZ      NOT NULL DEFAULT now(),
+    idempotency_key TEXT UNIQUE      NOT NULL
+);
+
