@@ -21,6 +21,11 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public TopicExchange healthCheckExchange() {
+        return new TopicExchange("health.checks");
+    }
+
+    @Bean
     public TopicExchange orderExchange() {
         return new TopicExchange("order.events");
     }
@@ -28,6 +33,11 @@ public class RabbitMqConfig {
     @Bean
     public Queue orderCreatedQueue() {
         return QueueBuilder.durable("order-created-queue").build();
+    }
+
+    @Bean
+    public Queue healthCheckQueue() {
+        return QueueBuilder.durable("health-check-queue").build();
     }
 
     @Bean
@@ -49,6 +59,14 @@ public class RabbitMqConfig {
             .bind(paymentCreatedQueue())
             .to(paymentExchange())
             .with("payment.created");
+    }
+
+    @Bean
+    public Binding healthCheckBinding() {
+        return BindingBuilder
+            .bind(healthCheckQueue())
+            .to(healthCheckExchange())
+            .with("health.check");
     }
 
     @Bean

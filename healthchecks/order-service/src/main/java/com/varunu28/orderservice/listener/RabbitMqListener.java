@@ -19,4 +19,9 @@ public class RabbitMqListener {
     public void handlePaymentEvents(String message) {
         LOGGER.info("Received message for payment: {}", message);
     }
+
+    @RabbitListener(queues = "health-check-queue")
+    public void handleHealthCheckEvents(String message) {
+        LOGGER.info("Received message for health check: {}", message);
+    }
 }

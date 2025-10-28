@@ -17,7 +17,7 @@ public class PaymentServiceDeepCheckIndicator implements HealthIndicator {
     @Override
     public Health health() {
         try {
-            Health.Builder builder = Health.up();
+            Health.Builder builder;
 
             long startTime = System.currentTimeMillis();
             long count = paymentRepository.count();
@@ -25,9 +25,14 @@ public class PaymentServiceDeepCheckIndicator implements HealthIndicator {
 
             long duration = endTime - startTime;
             if (duration > 1000) {
-                builder.down().withDetail("warning", "Slow database response time");
+                builder = Health.down()
+                    .withDetail("warning", "Slow database response time")
+                    .withDetail("count", count)
+                    .withDetail("response_time_ms", duration)
+                    .withDetail("service", "Payment service deep check operational but slow");
             } else {
-                builder.withDetail("database", "PostgreSQL connection healthy")
+                builder = Health.up()
+                    .withDetail("database", "PostgreSQL connection healthy")
                     .withDetail("payment_count", count)
                     .withDetail("response_time_ms", duration)
                     .withDetail("service", "Payment service deep check operational");

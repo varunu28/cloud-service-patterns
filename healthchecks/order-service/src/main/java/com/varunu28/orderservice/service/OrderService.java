@@ -6,12 +6,16 @@ import com.varunu28.orderservice.repository.OrderRepository;
 import java.util.UUID;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 @Service
 public class OrderService {
+
+    @Value("${payment.service.url}")
+    private String paymentServiceUrl;
 
     private final OrderRepository orderRepository;
     private final RestClient paymentServiceRestClient;
@@ -44,6 +48,7 @@ public class OrderService {
     private UUID registerPayment(double amount, UUID customerId, String idempotencyKey) {
         CreatePaymentRequest paymentRequest = new CreatePaymentRequest(customerId, amount, idempotencyKey);
         return paymentServiceRestClient.post()
+            .uri(paymentServiceUrl)
             .body(paymentRequest)
             .contentType(MediaType.APPLICATION_JSON)
             .retrieve()
