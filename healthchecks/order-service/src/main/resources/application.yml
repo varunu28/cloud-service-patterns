@@ -36,9 +36,17 @@ management:
         liveness:
           include: orderServiceHealth
           show-details: always
+        deep:
+          include: orderServiceDeepCheck
+          show-details: always
 
 payment:
   service:
     url: http://localhost:8002/api/v1/payments
   healthcheck:
     url: http://localhost:8002/actuator/health/paymentServiceHealth
+  deepcheck:
+    url: http://localhost:8002/actuator/health/paymentServiceDeepCheck
+
+test:
+  prefix: "TEST_"

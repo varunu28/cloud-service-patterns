@@ -16,6 +16,8 @@ public class OrderService {
 
     @Value("${payment.service.url}")
     private String paymentServiceUrl;
+    @Value("${test.prefix}")
+    private String testPrefix;
 
     private final OrderRepository orderRepository;
     private final RestClient paymentServiceRestClient;
@@ -31,18 +33,35 @@ public class OrderService {
     }
 
     public UUID createOrder(String description, double amount, UUID customerId) {
+        var isTestOrder = description.startsWith(testPrefix);
         // Generate an idempotency key for the order
         var idempotencyKey = String.format("%s-%f-%s", customerId, amount, description);
         // Call payment service to process payment
         UUID paymentId = registerPayment(amount, customerId, idempotencyKey);
         // Publish a payment created event
-        rabbitTemplate.convertAndSend("payment.events", "payment.created", paymentId);
+        publishPaymentCreatedEvent(paymentId, isTestOrder);
         // Save order to the database
         Order order = new Order(description, amount, customerId, paymentId, idempotencyKey);
         Order savedOrder = orderRepository.save(order);
         // Publish an order created event
-        rabbitTemplate.convertAndSend("order.events", "order.created", savedOrder.getId());
+        publishOrderCreatedEvent(savedOrder, isTestOrder);
         return savedOrder.getId();
+    }
+
+    private void publishOrderCreatedEvent(Order savedOrder, boolean isTestOrder) {
+        if (isTestOrder) {
+            rabbitTemplate.convertAndSend("health.checks", "health.check", savedOrder.getId());
+            return;
+        }
+        rabbitTemplate.convertAndSend("order.events", "order.created", savedOrder.getId());
+    }
+
+    private void publishPaymentCreatedEvent(UUID paymentId, boolean isTestOrder) {
+        if (isTestOrder) {
+            rabbitTemplate.convertAndSend("health.checks", "health.check", paymentId);
+            return;
+        }
+        rabbitTemplate.convertAndSend("payment.events", "payment.created", paymentId);
     }
 
     private UUID registerPayment(double amount, UUID customerId, String idempotencyKey) {
