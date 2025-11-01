@@ -3,13 +3,13 @@ spring:
     name: order-service
 
   rabbitmq:
-    host: localhost
+    host: rabbitmq-external
     port: 5672
     username: ${RABBITMQ_USER}
     password: ${RABBITMQ_PASSWORD}
 
   datasource:
-    url: jdbc:postgresql://localhost:5431/orderdb
+    url: jdbc:postgresql://orderdb-postgres-service:5431/orderdb
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -42,11 +42,11 @@ management:
 
 payment:
   service:
-    url: http://localhost:8002/api/v1/payments
+    url: http://payment-service:8002/api/v1/payments
   healthcheck:
-    url: http://localhost:8002/actuator/health/paymentServiceHealth
+    url: http://payment-service:8002/actuator/health/paymentServiceHealth
   deepcheck:
-    url: http://localhost:8002/actuator/health/paymentServiceDeepCheck
+    url: http://payment-service:8002/actuator/health/paymentServiceDeepCheck
 
 test:
   prefix: "TEST_"

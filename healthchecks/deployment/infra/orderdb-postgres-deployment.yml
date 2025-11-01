@@ -1,53 +1,53 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: paymentdb-postgres-deployment
+  name: orderdb-postgres-deployment
   namespace: healthcheck-demo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: paymentdb-postgres
+      app: orderdb-postgres
   template:
     metadata:
       labels:
-        app: paymentdb-postgres
+        app: orderdb-postgres
     spec:
       containers:
-        - name: paymentdb-postgres
+        - name: orderdb-postgres
           image: postgres:latest
           ports:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              value: "paymentdb"
+              value: "orderdb"
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: paymentdb-postgres-secret
-                  key: PAYMENTDB_POSTGRES_USER
+                  name: order-service-secret
+                  key: ORDERDB_POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: paymentdb-postgres-secret
-                  key: PAYMENTDB_POSTGRES_PASSWORD
+                  name: order-service-secret
+                  key: ORDERDB_POSTGRES_PASSWORD
           volumeMounts:
-            - name: paymentdb-postgres-storage
+            - name: orderdb-postgres-storage
               mountPath: /var/lib/postgresql
             - name: init-sql
               mountPath: /docker-entrypoint-initdb.d
       volumes:
-        - name: paymentdb-postgres-storage
+        - name: orderdb-postgres-storage
           persistentVolumeClaim:
-            claimName: paymentdb-postgres-pvc
+            claimName: orderdb-postgres-pvc
         - name: init-sql
           configMap:
-            name: paymentdb-postgres-config
+            name: orderdb-postgres-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: paymentdb-postgres-pvc
+  name: orderdb-postgres-pvc
   namespace: healthcheck-demo
 spec:
   accessModes:
@@ -59,13 +59,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: paymentdb-postgres-service
+  name: orderdb-postgres-service
   namespace: healthcheck-demo
 spec:
   selector:
-    app: paymentdb-postgres
+    app: orderdb-postgres
   ports:
     - protocol: TCP
-      port: 5432
+      port: 5431
       targetPort: 5432
   type: ClusterIP

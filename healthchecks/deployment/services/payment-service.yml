@@ -42,6 +42,6 @@ spec:
     app: payment-service
   ports:
     - protocol: TCP
-      port: 80
+      port: 8002
       targetPort: 8002
   type: ClusterIP
