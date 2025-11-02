@@ -41,6 +41,18 @@ spec:
                 secretKeyRef:
                   name: order-service-secret
                   key: RABBITMQ_PASSWORD
+          readinessProbe:
+            httpGet:
+              port: 8001
+              path: /actuator/health/orderServiceDeepCheck
+            initialDelaySeconds: 30 # Initial wait period
+            periodSeconds: 10 # Interval between checks
+          livenessProbe:
+            httpGet:
+              port: 8001
+              path: /actuator/health/orderServiceHealth
+            initialDelaySeconds: 60
+            periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service

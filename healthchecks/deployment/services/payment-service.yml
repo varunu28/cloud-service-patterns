@@ -31,6 +31,18 @@ spec:
                 secretKeyRef:
                   name: paymentdb-postgres-secret
                   key: PAYMENTDB_POSTGRES_PASSWORD
+          readinessProbe:
+            httpGet:
+              port: 8002
+              path: /actuator/health/paymentServiceDeepCheck
+            initialDelaySeconds: 30 # Initial wait period
+            periodSeconds: 10 # Interval between checks
+          livenessProbe:
+            httpGet:
+              port: 8002
+              path: /actuator/health/paymentServiceHealth
+            initialDelaySeconds: 60
+            periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service
