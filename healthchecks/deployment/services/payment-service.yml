@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: varunu2892/payment-service:latest
+          image: varunu2892/payment-service:faulty-service
           imagePullPolicy: Never
           ports:
             - containerPort: 8002

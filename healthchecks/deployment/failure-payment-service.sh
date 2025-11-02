@@ -8,7 +8,7 @@ cd ../payment-service
 cd ..
 
 ## Upload payment service image to minikube
-minikube image load varunu2892/payment-service:latest
+minikube image load varunu2892/payment-service:faulty-service
 
 # Deploy payment service
 cd deployment

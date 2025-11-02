@@ -69,7 +69,7 @@
                         <env>
                             <BP_JVM_VERSION>21</BP_JVM_VERSION>
                         </env>
-                        <name>varunu2892/payment-service</name>
+                        <name>varunu2892/payment-service:faulty-service</name>
                     </image>
                 </configuration>
             </plugin>
