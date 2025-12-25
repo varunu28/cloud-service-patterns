@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.varunu28.orderservice.service.OrderService;
 import java.util.Objects;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -12,6 +14,8 @@ import org.springframework.web.client.RestClient;
 
 @Component("orderServiceDeepCheck")
 public class OrderServiceDeepCheckIndicator implements HealthIndicator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceDeepCheckIndicator.class);
 
     private final OrderService orderService;
     private final RestClient restClient;
@@ -29,6 +33,7 @@ public class OrderServiceDeepCheckIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
+        LOGGER.info("Deep check started");
         try {
             // First, verify Payment Service deep check
             PaymentDeepCheckResponse paymentDeepCheckResponse = restClient.get()
@@ -36,6 +41,7 @@ public class OrderServiceDeepCheckIndicator implements HealthIndicator {
                 .retrieve()
                 .body(PaymentDeepCheckResponse.class);
             if (!"UP".equals(Objects.requireNonNull(paymentDeepCheckResponse).status())) {
+                LOGGER.info("Deep check failed for Payment Service");
                 return Health.down()
                     .withDetail("paymentDeepCheck", "Payment Service deep check reported DOWN status")
                     .withDetail("service", "Order service deep check failed")
@@ -46,12 +52,14 @@ public class OrderServiceDeepCheckIndicator implements HealthIndicator {
                 testPrefix + UUID.randomUUID(),
                 100.0,
                 UUID.randomUUID());
+            LOGGER.info("Deep check passed");
             return Health.up()
                 .withDetail("id for test order", testOrderId.toString())
                 .withDetail("service", "Order service deep check passed")
                 .withDetail("paymentDeepCheck", paymentDeepCheckResponse.details.service)
                 .build();
         } catch (Exception e) {
+            LOGGER.info("Deep check failed due to exception: {}", e.getMessage());
             return Health.down()
                 .withDetail("deepCheck", "Failed to create test order")
                 .withDetail("Error", e.getMessage())
