@@ -9,3 +9,4 @@ Code accompanying blogs for cloud service patterns
 - [Cloud Bits: API Gateways – Cloud System’s Reception Desk](https://distributed-computing-musings.com/2025/06/cloud-bits-api-gateways-cloud-systems-reception-desk/)
 - [Cloud Bits: Circuit Breakers – The First Line of Defense in Cloud-Native Resilience](https://distributed-computing-musings.com/2025/08/cloud-bits-circuit-breakers-the-first-line-of-defense-in-cloud-native-resilience/)
 - [Cloud Bits: Beyond Pings – Checks for Cloud-Native Reliability](https://distributed-computing-musings.com/2025/12/cloud-bits-beyond-pings-checks-for-cloud-native-reliability/)
+- [Cloud Bits: Bounded by contract](https://distributed-computing-musings.com/2026/01/cloud-bits-bounded-by-contract/)
