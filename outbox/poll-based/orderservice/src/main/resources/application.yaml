@@ -1,3 +1,6 @@
 spring:
   application:
     name: orderservice
+
+server:
+  port: 8001
