@@ -2,5 +2,18 @@ spring:
   application:
     name: orderservice
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/order-service
+    username: order-user
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+
 server:
   port: 8001
+
+notification:
+  service:
+    url: "http://localhost:8002/api/v1/notifications"
