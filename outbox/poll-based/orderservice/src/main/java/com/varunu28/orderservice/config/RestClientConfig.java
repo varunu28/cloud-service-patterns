@@ -14,7 +14,7 @@ public class RestClientConfig {
     private String notificationServiceUrl;
 
     @Bean
-    public RestClient restClient() {
+    public RestClient notificationServiceRestClient() {
         return RestClient.builder()
             .baseUrl(notificationServiceUrl)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

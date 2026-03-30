@@ -1,39 +1,22 @@
 package com.varunu28.orderservice.outbox;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.varunu28.orderservice.repository.OutboxRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.TimeUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RelayWorker {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RelayWorker.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final int SCHEDULE_TIME_PERIOD = 5;
 
-    private static final int SCHEDULE_TIME_PERIOD = 5000; // 5 seconds
+    private final RelayService relayService;
 
-    private final OutboxRepository outboxRepository;
-
-    public RelayWorker(OutboxRepository outboxRepository) {
-        this.outboxRepository = outboxRepository;
+    public RelayWorker(RelayService relayService) {
+        this.relayService = relayService;
     }
 
-    @Scheduled(fixedRate = SCHEDULE_TIME_PERIOD)
+    @Scheduled(fixedRate = SCHEDULE_TIME_PERIOD, timeUnit = TimeUnit.SECONDS)
     public void processOutbox() {
-        outboxRepository.findAllPending()
-            .forEach(outbox -> {
-                try {
-                    LOGGER.info(
-                        "Processing outbox with id: {} Payload: {}",
-                        outbox.getId(),
-                        MAPPER.readValue(outbox.getPayload(), PayloadData.class));
-                } catch (JsonProcessingException e) {
-                    LOGGER.info("Error processing outbox with id: {}", e.getMessage());
-                }
-            });
+        relayService.queryAndProcessOrderEvents();
     }
 }
