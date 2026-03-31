@@ -11,11 +11,9 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 
 @Component
 public class RelayService {
@@ -24,11 +22,13 @@ public class RelayService {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final int MAX_RETRIES = 3;
 
-    private final RestClient notificationServiceRestClient;
+    private static final String ORDER_CREATED_TOPIC = "order-created";
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private final OutboxRepository outboxRepository;
 
-    public RelayService(RestClient notificationServiceRestClient, OutboxRepository outboxRepository) {
-        this.notificationServiceRestClient = notificationServiceRestClient;
+    public RelayService(KafkaTemplate<String, String> kafkaTemplate, OutboxRepository outboxRepository) {
+        this.kafkaTemplate = kafkaTemplate;
         this.outboxRepository = outboxRepository;
     }
 
@@ -41,7 +41,7 @@ public class RelayService {
                 LOGGER.info(
                     "Processing outbox with id: {} Payload: {}",
                     outboxProjection.getId(), payloadData);
-                boolean successful = invokeNotificationRestEndpoint(outboxProjection, payloadData);
+                boolean successful = publishToKafka(outboxProjection, payloadData);
                 processingResult.put(outboxProjection, successful);
             } catch (JsonProcessingException e) {
                 LOGGER.info("Error processing outbox with id: {}", e.getMessage());
@@ -51,7 +51,7 @@ public class RelayService {
         updateOutboxEntities(processingResult);
     }
 
-    private boolean invokeNotificationRestEndpoint(OutboxProjection outboxProjection, PayloadData payloadData) {
+    private boolean publishToKafka(OutboxProjection outboxProjection, PayloadData payloadData) {
         String idempotencyKey = String.format("idempotency-key-%s", outboxProjection.getId());
         SendNotificationDto sendNotificationDto = new SendNotificationDto(
             idempotencyKey,
@@ -61,14 +61,12 @@ public class RelayService {
             payloadData.amount()
         );
         try {
-            ResponseEntity<Void> response = notificationServiceRestClient.post()
-                .body(sendNotificationDto)
-                .retrieve()
-                .toEntity(Void.class);
-            return response.getStatusCode().is2xxSuccessful();
-        } catch (RestClientException e) {
+            String message = MAPPER.writeValueAsString(sendNotificationDto);
+            kafkaTemplate.send(ORDER_CREATED_TOPIC, String.valueOf(outboxProjection.getId()), message).get();
+            return true;
+        } catch (Exception e) {
             LOGGER.error(
-                "Failed to invoke notification endpoint for outbox id: {}. Error: {}",
+                "Failed to publish to Kafka for outbox id: {}. Error: {}",
                 outboxProjection.getId(), e.getMessage());
             return false;
         }

@@ -2,9 +2,16 @@ spring:
   application:
     name: notificationservice
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: record
+
 server:
   port: 8002
-
-failure:
-  amount:
-    threshold: 120
