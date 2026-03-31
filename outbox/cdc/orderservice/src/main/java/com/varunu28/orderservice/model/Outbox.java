@@ -25,15 +25,6 @@ public class Outbox {
     @Column(nullable = false, columnDefinition = "JSONB")
     private String payload;
 
-    @Column(nullable = false, length = 50)
-    private String state = "PENDING";
-
-    @Column(name = "retry_count", nullable = false)
-    private int retryCount;
-
-    @Column(name = "next_retry_at")
-    private LocalDateTime nextRetryAt;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -55,18 +46,6 @@ public class Outbox {
 
     public String getPayload() {
         return payload;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public int getRetryCount() {
-        return retryCount;
-    }
-
-    public LocalDateTime getNextRetryAt() {
-        return nextRetryAt;
     }
 
     public LocalDateTime getCreatedAt() {

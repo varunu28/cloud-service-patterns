@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS outbox (
     id BIGSERIAL PRIMARY KEY,
     event_type VARCHAR(255) NOT NULL,
     payload JSONB NOT NULL,
-    state VARCHAR(50) NOT NULL DEFAULT 'PENDING',
-    retry_count INT NOT NULL DEFAULT 0,
-    next_retry_at TIMESTAMP,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE PUBLICATION outbox_pub FOR TABLE outbox;

@@ -1,6 +1,7 @@
 services:
   postgres:
     image: 'postgres:latest'
+    command: ['postgres', '-c', 'wal_level=logical']
     environment:
       - 'POSTGRES_DB=order-service'
       - 'POSTGRES_PASSWORD=secret'
