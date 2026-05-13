@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: payment-service
+
+server:
+  port: 8002
