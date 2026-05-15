@@ -1,4 +1,4 @@
-package com.saga.paymentservice.kafka
+package com.saga.inventoryservice.kafka
 
 object KafkaTopics {
     const val ORDER_CREATED_TOPIC = "order-created"
