@@ -1,5 +1,6 @@
 package com.saga.orderservice
 
+import com.saga.orderservice.kafka.KafkaTopics.ORDER_CREATED_TOPIC
 import com.saga.orderservice.kafka.OrderCreatedEvent
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.kafka.core.KafkaTemplate
@@ -12,8 +13,6 @@ class OrderService(
     private val db: OrderRepository,
     private val kafkaTemplate: KafkaTemplate<String, String>
 ) {
-
-    final val orderCreatedTopic = "order-created"
 
     fun createOrder(request: CreateOrderRequest): BigInteger {
         val now = LocalDateTime.now()
@@ -28,7 +27,7 @@ class OrderService(
         val savedOrder = db.save(order)
         val orderId = savedOrder.id ?: BigInteger.ZERO
         val orderCreatedEvent = OrderCreatedEvent(orderId, savedOrder.inventoryCount, savedOrder.amount)
-        kafkaTemplate.send(orderCreatedTopic, orderCreatedEvent.toString())
+        kafkaTemplate.send(ORDER_CREATED_TOPIC, orderCreatedEvent.toString())
         return orderId
     }
 
