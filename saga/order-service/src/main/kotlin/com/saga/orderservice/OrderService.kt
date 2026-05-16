@@ -7,6 +7,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.time.LocalDateTime
+import java.util.UUID
 
 @Service
 class OrderService(
@@ -26,7 +27,9 @@ class OrderService(
         )
         val savedOrder = db.save(order)
         val orderId = savedOrder.id ?: BigInteger.ZERO
-        val orderCreatedEvent = OrderCreatedEvent(orderId, savedOrder.inventoryCount, savedOrder.amount)
+        val idempotencyKey = UUID.randomUUID().toString()
+        val orderCreatedEvent = OrderCreatedEvent(
+            orderId, savedOrder.inventoryCount, savedOrder.amount, savedOrder.customerName, idempotencyKey)
         kafkaTemplate.send(ORDER_CREATED_TOPIC, orderCreatedEvent.toString())
         return orderId
     }

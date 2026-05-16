@@ -1,4 +1,4 @@
-package com.saga.paymentservice.kafka
+package com.saga.inventoryservice.kafka
 
 import java.math.BigInteger
 
