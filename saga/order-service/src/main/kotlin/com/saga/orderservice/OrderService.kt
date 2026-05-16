@@ -2,12 +2,13 @@ package com.saga.orderservice
 
 import com.saga.orderservice.kafka.KafkaTopics.ORDER_CREATED_TOPIC
 import com.saga.orderservice.kafka.OrderCreatedEvent
+import kotlinx.serialization.json.Json
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Service
 class OrderService(
@@ -29,8 +30,10 @@ class OrderService(
         val orderId = savedOrder.id ?: BigInteger.ZERO
         val idempotencyKey = UUID.randomUUID().toString()
         val orderCreatedEvent = OrderCreatedEvent(
-            orderId, savedOrder.inventoryCount, savedOrder.amount, savedOrder.customerName, idempotencyKey)
-        kafkaTemplate.send(ORDER_CREATED_TOPIC, orderCreatedEvent.toString())
+            orderId.toString(), savedOrder.inventoryCount, savedOrder.amount, savedOrder.customerName, idempotencyKey
+        )
+        val eventString = Json.encodeToString(orderCreatedEvent)
+        kafkaTemplate.send(ORDER_CREATED_TOPIC, eventString)
         return orderId
     }
 

@@ -1,9 +1,10 @@
 package com.saga.inventoryservice.kafka
 
-import java.math.BigInteger
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OrderCreatedEvent(
-    val orderId: BigInteger,
+    val orderId: String,
     val inventoryCount: Int,
     val amount: Double,
     val customerName: String,
