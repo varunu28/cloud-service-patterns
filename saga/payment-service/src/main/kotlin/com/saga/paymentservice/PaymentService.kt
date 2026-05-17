@@ -6,6 +6,7 @@ import com.saga.paymentservice.kafka.PaymentEvent
 import jakarta.transaction.Transactional
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import java.math.BigInteger
@@ -44,7 +45,12 @@ class PaymentService(
             createdAt = now,
             updatedAt = now,
         )
-        val savedPayment = paymentRepository.save(payment)
+        val savedPayment: Payment
+        try {
+            savedPayment = paymentRepository.save(payment)
+        } catch (_: DataIntegrityViolationException) {
+            return
+        }
         val paymentId = savedPayment.id ?: BigInteger.ZERO
         val paymentTransaction = PaymentTransaction(
             paymentId = paymentId,
