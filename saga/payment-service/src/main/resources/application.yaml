@@ -17,5 +17,9 @@ spring:
     listener:
       ack-mode: manual_immediate
 
+payment:
+  amount:
+    threshold: 10000.0
+
 server:
   port: 8002
