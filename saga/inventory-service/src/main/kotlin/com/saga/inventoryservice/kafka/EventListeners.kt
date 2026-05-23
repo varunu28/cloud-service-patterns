@@ -1,18 +1,20 @@
 package com.saga.inventoryservice.kafka
 
+import com.saga.inventoryservice.InventoryService
 import com.saga.inventoryservice.kafka.KafkaTopics.ORDER_CREATED_TOPIC
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
+import java.math.BigInteger
 
 val safeJsonParser = Json {
     ignoreUnknownKeys = true
 }
 
 @Component
-class EventListeners {
+class EventListeners(private val inventoryService: InventoryService) {
 
     private val logger = LoggerFactory.getLogger(EventListeners::class.java)
 
@@ -20,6 +22,11 @@ class EventListeners {
     fun orderCreatedListener(message: String, ack: Acknowledgment) {
         val orderCreatedEvent = safeJsonParser.decodeFromString<OrderCreatedEvent>(message)
         logger.info("Received message from order-created topic: {}", orderCreatedEvent)
+        inventoryService.persistInventory(
+            orderId = BigInteger(orderCreatedEvent.orderId),
+            inventoryCount = orderCreatedEvent.inventoryCount,
+            customerName = orderCreatedEvent.customerName,
+        )
         ack.acknowledge()
     }
 }
