@@ -72,13 +72,13 @@ class PaymentService(
         // Add payment transaction with reverted status & negative amount
         val paymentTransaction = PaymentTransaction(
             paymentId = paymentId,
-            transactionType = "REVERT",
+            transactionType = "REFUND",
             amount = paymentByOrderId.amount * -1,
             createdAt = now
         )
         paymentTransactionRepository.save(paymentTransaction)
         // Revert payment
-        paymentByOrderId.status = "REVERTED"
+        paymentByOrderId.status = "REFUNDED"
         paymentByOrderId.amount = 0.0
         paymentByOrderId.updatedAt = now
         paymentRepository.save(paymentByOrderId)
