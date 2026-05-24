@@ -55,4 +55,25 @@ class InventoryService(
         val eventString = Json.encodeToString(inventorySuccessEvent)
         kafkaTemplate.send(INVENTORY_RESERVATION_SUCCESSFUL_TOPIC, eventString)
     }
+
+    @Transactional
+    fun revertInventory(orderId: BigInteger) {
+        // Query inventory
+        val inventory = inventoryRepository.findByOrderId(orderId = orderId) ?: return
+        val now = LocalDateTime.now()
+        val inventoryId = inventory.id ?: BigInteger.ZERO
+        // Add inventory record for revert
+        val inventoryRecord = InventoryRecord(
+            inventoryId = inventoryId,
+            recordType = "INVENTORY_REVERTED",
+            inventoryCount = inventory.inventoryCount * -1,
+            createdAt = now,
+        )
+        inventoryRecordRepository.save(inventoryRecord)
+        // Update inventory
+        inventory.inventoryCount = 0
+        inventory.status = "REJECTED"
+        inventory.updatedAt = now
+        inventoryRepository.save(inventory)
+    }
 }

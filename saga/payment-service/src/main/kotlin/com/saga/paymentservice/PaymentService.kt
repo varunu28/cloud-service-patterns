@@ -66,7 +66,7 @@ class PaymentService(
 
     @Transactional
     fun revertPayment(orderId: BigInteger) {
-        val paymentByOrderId = paymentRepository.findByOrderId(orderId = orderId) ?: throw PaymentNotFoundException()
+        val paymentByOrderId = paymentRepository.findByOrderId(orderId = orderId) ?: return
         val now = LocalDateTime.now()
         val paymentId = paymentByOrderId.id ?: BigInteger.ZERO
         // Add payment transaction with reverted status & negative amount
