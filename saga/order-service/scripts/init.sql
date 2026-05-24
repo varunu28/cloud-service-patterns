@@ -12,8 +12,9 @@ CREATE TABLE IF NOT EXISTS order_events (
     id BIGSERIAL PRIMARY KEY,
     order_id BIGINT NOT NULL,
     event_name VARCHAR(255) NOT NULL,
-    status VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE,
     CONSTRAINT ue_order_id_event_name UNIQUE (order_id, event_name)
 );
+
+CREATE INDEX IF NOT EXISTS idx_order_events_order_id ON order_events(order_id);
