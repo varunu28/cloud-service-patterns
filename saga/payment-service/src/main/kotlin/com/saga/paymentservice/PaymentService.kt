@@ -63,4 +63,24 @@ class PaymentService(
         val eventString = Json.encodeToString(paymentSuccessEvent)
         kafkaTemplate.send(PAYMENT_SUCCEEDED_TOPIC, eventString)
     }
+
+    @Transactional
+    fun revertPayment(orderId: BigInteger) {
+        val paymentByOrderId = paymentRepository.findByOrderId(orderId = orderId) ?: throw PaymentNotFoundException()
+        val now = LocalDateTime.now()
+        val paymentId = paymentByOrderId.id ?: BigInteger.ZERO
+        // Add payment transaction with reverted status & negative amount
+        val paymentTransaction = PaymentTransaction(
+            paymentId = paymentId,
+            transactionType = "REVERT",
+            amount = paymentByOrderId.amount * -1,
+            createdAt = now
+        )
+        paymentTransactionRepository.save(paymentTransaction)
+        // Revert payment
+        paymentByOrderId.status = "REVERTED"
+        paymentByOrderId.amount = 0.0
+        paymentByOrderId.updatedAt = now
+        paymentRepository.save(paymentByOrderId)
+    }
 }
