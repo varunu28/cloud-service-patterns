@@ -7,6 +7,6 @@ services:
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=myuser'
     ports:
-      - '5431:5432'
+      - '5432:5432'
     volumes:
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
