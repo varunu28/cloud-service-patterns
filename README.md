@@ -11,3 +11,4 @@ Code accompanying blogs for cloud service patterns
 - [Cloud Bits: Beyond Pings – Checks for Cloud-Native Reliability](https://distributed-computing-musings.com/2025/12/cloud-bits-beyond-pings-checks-for-cloud-native-reliability/)
 - [Cloud Bits: Bounded by contract](https://distributed-computing-musings.com/2026/01/cloud-bits-bounded-by-contract/)
 - [Cloud Bits: Breaking the Double Write – A Guide to Distributed Data Consistency](https://distributed-computing-musings.com/2026/05/cloud-bits-breaking-the-double-write-a-guide-to-distributed-data-consistency/)
+- [Cloud Bits: Dancing Through Failures – Saga Pattern for Resilient Microservices](https://distributed-computing-musings.com/2026/06/cloud-bits-dancing-through-failures-saga-pattern-for-resilient-microservicescloud-bits/)
