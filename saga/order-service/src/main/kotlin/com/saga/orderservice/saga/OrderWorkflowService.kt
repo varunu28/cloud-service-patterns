@@ -42,8 +42,8 @@ class OrderWorkflowService(
         }
 
         // Flags for tracking request states
-        var paymentCharged = false
-        var inventoryReserved = false
+        var paymentCharged: Boolean
+        var inventoryReserved: Boolean
 
         try {
             CompletableFuture.allOf(paymentFuture, inventoryFuture).join()
