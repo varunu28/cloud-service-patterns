@@ -20,9 +20,7 @@ const (
 )
 
 func main() {
-	client := &http.Client{
-		Timeout: 2 * time.Second,
-	}
+	client := &http.Client{}
 
 	fmt.Println("Starting Service B Heartbeat...")
 	go func() {
@@ -45,7 +43,16 @@ func main() {
 	for range RequestCount {
 		wg.Add(1)
 		wg.Go(func() {
-			_, _ = client.Get(ServiceAUrl)
+			resp, err := client.Get(ServiceAUrl)
+			if err != nil {
+				fmt.Printf("❌ Service A FAILED: %v\n", err)
+			} else {
+				if resp.StatusCode == 200 {
+					fmt.Println("✅ Service A OK")
+				} else {
+					fmt.Printf("❌ Service A FAILED with error code: %d\n", resp.StatusCode)
+				}
+			}
 		})
 	}
 
