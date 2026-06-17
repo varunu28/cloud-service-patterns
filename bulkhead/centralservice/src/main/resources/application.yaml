@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: centralservice
+
+
+server:
+  port: 8000
+  tomcat:
+    threads:
+      max: 10
+    accept-count: 10
+    mbeanregistry:
+      enabled: true
+
+servicea:
+  url: http://localhost:8001/api/v1
+
+serviceb:
+  url: http://localhost:8002/api/v1
+
+management:
+  server:
+    port: 8081 # Separate port for production readiness
+  endpoints:
+    web:
+      exposure:
+        include: metrics
