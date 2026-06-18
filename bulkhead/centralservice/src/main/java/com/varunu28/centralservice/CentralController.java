@@ -1,7 +1,7 @@
 package com.varunu28.centralservice;
 
-import io.varunu28.bulkheadlite.CustomBulkhead;
 import org.springframework.http.HttpStatus;
+import org.springframework.resilience.annotation.ConcurrencyLimit;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,7 +22,7 @@ public class CentralController {
 
     @GetMapping("/servicea")
     @ResponseStatus(HttpStatus.OK)
-    @CustomBulkhead(name = "getServiceA")
+    @ConcurrencyLimit(limit = 5, policy = ConcurrencyLimit.ThrottlePolicy.REJECT)
     public String servicea() {
         return serviceaRestClient.get()
                 .retrieve()
@@ -31,7 +31,7 @@ public class CentralController {
 
     @GetMapping("/serviceb")
     @ResponseStatus(HttpStatus.OK)
-    @CustomBulkhead(name = "gerServiceB")
+    @ConcurrencyLimit(limit = 5, policy = ConcurrencyLimit.ThrottlePolicy.REJECT)
     public String serviceb() {
         return servicebRestClient.get()
                 .retrieve()
