@@ -2,7 +2,6 @@ spring:
   application:
     name: centralservice
 
-
 server:
   port: 8000
   tomcat:
@@ -14,9 +13,11 @@ server:
 
 servicea:
   url: http://localhost:8001/api/v1
+  max-connections: 5
 
 serviceb:
   url: http://localhost:8002/api/v1
+  max-connections: 5
 
 management:
   server:
