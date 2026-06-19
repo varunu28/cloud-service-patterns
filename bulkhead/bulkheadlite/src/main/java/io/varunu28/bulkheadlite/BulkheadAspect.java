@@ -16,10 +16,10 @@ public class BulkheadAspect {
     private final Map<String, Semaphore> semaphores = new ConcurrentHashMap<>();
 
     @Around("@annotation(bulkhead)")
-    public Object apply(ProceedingJoinPoint joinPoint, CustomBulkhead annotation) throws Throwable {
+    public Object apply(ProceedingJoinPoint joinPoint, CustomBulkhead bulkhead) throws Throwable {
         Semaphore semaphore = semaphores.computeIfAbsent(
-                annotation.name(),
-                _ -> new Semaphore(annotation.maxConcurrent(), true)
+                bulkhead.name(),
+                _ -> new Semaphore(bulkhead.maxConcurrent(), true)
         );
         if (semaphore.tryAcquire()) {
             try {
@@ -28,7 +28,7 @@ public class BulkheadAspect {
                 semaphore.release();
             }
         } else {
-            throw new BulkheadFullException("Bulkhead: " + annotation.name() + " is full. Request rejected");
+            throw new BulkheadFullException("Bulkhead: " + bulkhead.name() + " is full. Request rejected");
         }
     }
 }
