@@ -1,0 +1,8 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: sidecar-demo
+spec:
+  profile: minimal
+  meshConfig:
+    accessLogFile: /dev/stdout
